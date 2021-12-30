@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyp.count.learn.dao.LearnCountDao">
+	<sql id="Base_Column_List">
+    id, learn_date,begin_time, end_time,learn_content, learn_hours, `year`, `month`, `day`, week_day, update_time
+  </sql>
+	<insert id="batchInsert">
+		insert into tbl_learn_detail (learn_date,begin_time, end_time,learn_content, learn_hours, `year`, `month`, `day`, week_day)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.learnDate},#{item.beginTime}, #{item.endTime}, #{item.learnContent},
+			#{item.learnHours},#{item.year,jdbcType=INTEGER}, #{item.month,jdbcType=INTEGER},
+			#{item.day,jdbcType=INTEGER}, #{item.weekDay,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<sql id="QueryCondition">
+		<if test="year != null and year != 0">
+			and `year` = #{year}
+		</if>
+		<if test="month != null and month != 0">
+			and `month` = #{month}
+		</if>
+		<if test="learnContent != null and learnContent != ''.toString()">
+			and learn_content = #{learnContent}
+		</if>
+	</sql>
+
+
+	<select id="selectByCondition" resultType="com.lyp.count.learn.bean.LearnCountDetail">
+		select
+		<include refid="Base_Column_List"/>
+		from tbl_learn_detail
+		<where>
+			<if test="year != null and year != 0">
+				and `year` = #{year}
+			</if>
+			<if test="month != null and year != 0">
+				and `month` = #{month}
+			</if>
+		</where>
+		order by year desc,month desc,day desc,update_time desc
+		limit #{beginIndex},#{pageSize}
+	</select>
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(id) from tbl_learn_detail
+		<where>
+			<if test="year != null and year != 0">
+				and `year` = #{year}
+			</if>
+			<if test="month != null and month != 0">
+				and `month` = #{month}
+			</if>
+
+		</where>
+	</select>
+
+	<select id="countByMonth" resultType="com.lyp.count.learn.bean.LearnCountDetail">
+		SELECT sum(learn_hours) learnHours, `year`, `month`, `day`, learn_date FROM tbl_learn_detail
+		where  1 = 1
+		<include refid="QueryCondition"/>
+		group BY DAY
+	</select>
+	<select id="selectYearMonthScope" resultType="com.lyp.count.common.bean.YearMonthScopeVO">
+			SELECT MAX(yearMonth) maxYearMonth,MIN(yearMonth) minYearMonth,MAX(YEAR) maxYear,MIN(YEAR) minYear FROM
+			(SELECT YEAR*100+MONTH yearMonth,YEAR FROM tbl_learn_detail) t
+	</select>
+	<select id="selectTotalLearnTime" resultType="java.lang.Integer">
+		SELECT COUNT(id) FROM tbl_learn_detail
+		where 1=1
+		<include refid="QueryCondition"/>
+	</select>
+	<select id="selectAllMonthByYear" resultType="com.lyp.count.learn.bean.LearnCountDetail">
+		select year,month,sum(learn_hours) learnHours
+		from tbl_learn_detail where year = #{year} group by month
+	</select>
+	<select id="selectAlYearsData" resultType="com.lyp.count.learn.bean.LearnCountDetail">
+		select year,sum(learn_hours) learnHours from tbl_learn_detail group by `year` order by year asc
+	</select>
+
+	<!--按时间倒序取最近学习的内容-->
+	<select id="selectContent" resultType="java.lang.String">
+		select learn_content learnContent  FROM
+		(select  learn_content,max(update_time) update_time from tbl_learn_detail group BY learn_content) t
+		ORDER BY update_time desc
+	</select>
+	<select id="selectSpecialWeek" resultType="com.lyp.count.learn.bean.LearnCountDetail">
+		select sum(learn_hours) learnHours,week_day weekDay from tbl_learn_detail
+		where strftime('%Y-%m-%d',learn_date) &gt;= strftime('%Y-%m-%d',#{mondayDay})
+		and date(learn_date) &lt;=	date(#{sundayDay})
+		<if test="learnContent != null and learnContent != ''.toString()">
+			and learn_content = #{learnContent}
+		</if>
+		group by learn_date
+	</select>
+	<select id="countSpecialWeek" resultType="java.lang.Integer">
+		select count(id) from tbl_learn_detail
+		where strftime('%Y-%m-%d',learn_date) &gt;= strftime('%Y-%m-%d',#{mondayDay})
+		and date(learn_date) &lt;=	date(#{sundayDay})
+		<if test="learnContent != null and learnContent != ''.toString()">
+			and learn_content = #{learnContent}
+		</if>
+	</select>
+
+</mapper>

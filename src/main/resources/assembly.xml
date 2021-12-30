@@ -1,0 +1,66 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	<id>package</id>
+	<formats>
+		<!--支持 zip，tar，tar.gz，tar.bz2，jar，dir，war 等 -->
+		<format>dir</format>
+	</formats>
+	<!--压缩包下是否生成和项目名相同的根目录-->
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+
+		<dependencySet>
+			<!--如果设置为true，则此属性将所有依赖项解包到指定的输出目录中。设置为false时，依赖关系将被包含为档案（jar）。只能解压jar，zip，tar.gz和tar.bz压缩文件。-->
+			<!--默认值是：false。-->
+			<unpack>false</unpack>
+			<!-- 将项目所有依赖包拷贝到发布包的lib目录下 ：-->
+			<outputDirectory>lib</outputDirectory>
+			<!--是否把本项目添加到依赖文件夹下:-->
+			<useProjectArtifact>true</useProjectArtifact>
+			<!--
+				确定此依赖项集中的包含/排除模式是否将应用于给定工件的传递路径。
+				如果为真，并且当前工件是由包含或排除模式匹配的另一个工件引入的传递依赖性，则当前工件具有与其相同的包含/排除逻辑。
+				默认情况下，此值为false，以保持与2.1版的向后兼容性。这意味着包含/排除仅仅直接应用于当前的工件，而不应用于传入的工件。（从2.2-beta-1）
+				默认值为：false。
+				-->
+			<useTransitiveDependencies>true</useTransitiveDependencies>
+
+			<!--
+					 如果指定为true，那么在程序集创建过程中任何用于过滤实际构件的包含/排除模式都将导致构建失败，并显示错误。这是为了强调过时的包含或排除，或者表示程序集描述符配置不正确。（从2.2开始）
+					 默认值是：false。
+			 -->
+			<useStrictFiltering>false</useStrictFiltering>
+			<!--将构建的jar包排除放入lib/下-->
+		<!--	<excludes>
+				<exclude>${groupId}:${artifactId}</exclude>
+			</excludes>-->
+			<fileMode>0755</fileMode>
+			<!--<includes></includes>-->
+			<!--将scope为runtime的依赖包打包-->
+			<scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<!--	将target下的所有jar包放到打包的根目录下，由于在dependencySet中已经配置将所有jar包
+			除了项目构建的jar放入lib包中，所以这里只会将构建的 runCount.jar放入 count目录中-->
+		<!--<fileSet>
+			<directory>${project.build.directory}</directory>
+			<outputDirectory>${file.separator}</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>-->
+		<!--将count路径下的db文件拷贝到打包zip包的根路径-->
+		<fileSet>
+			<!--原来项目的根路径-->
+			<directory>${basedir}</directory>
+			<!--打包后的输出根路径，比如打包后为一个zip包，则为zip包下的根路径-->
+			<outputDirectory>${file.separator}</outputDirectory>
+			<includes>
+				<include>*.db</include>
+			</includes>
+			<fileMode>0744</fileMode>
+		</fileSet>
+	</fileSets>
+</assembly>

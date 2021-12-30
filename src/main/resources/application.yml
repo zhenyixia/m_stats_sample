@@ -1,0 +1,41 @@
+server:
+  port: 8082
+  address: 127.0.0.1
+  tomcat:
+    uri-encoding: UTF-8
+
+mybatis-plus:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.lyp.count
+  configuration:
+    # 打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #是否开启自动驼峰命名规则映射，即从经典数据库列名 A_COLUMN 到经典 Java 属性名 aColumn 的类似映射。
+    map-underscore-to-camel-case: true
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    dynamic:
+        primary: master
+        datasource:
+          master:
+            username:
+            password:
+#           url: jdbc:sqlite:D:\all-dev-learning\005--GIT\006_my_repository\stats\runCount.db
+            url: jdbc:sqlite:runCount.db
+            driver-class-name: org.sqlite.JDBC
+          slave:
+            username: root
+            password: ENC(ey/INZfInTEGpFnu23IabA==)
+            url: jdbc:mysql://localhost:3306/springboot01?serverTimeZone=UTC&characterEncoding=utf8
+            driver-class-name: com.mysql.jdbc.Driver
+
+#pagehelper:
+#  helper-dialect: mysql
+#  #在启用合理化时，如果 pageNum<1，则会查询第一页；如果 pageNum>pages，则会查询最后一页。
+#  reasonable: true
+#  # 支持通过Mapper接口参数来传递分页参数，默认值false，分页插件会从查询方法的参数值中，自动根据上面 params 配置的字段中取值，查找到合适的值时就会自动分页。
+#  support-methods-arguments: true
+##  params: count=countSql

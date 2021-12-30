@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyp.count.menu.MenuDao">
+	<sql id="Base_Column_List">
+		id, class as menu, sub_class as subMenu
+	</sql>
+	<insert id="addClass">
+		INSERT INTO tbl_stats_menu(class,sub_class) values(#{menu},#{subMenu})
+	</insert>
+	<update id="updateMenu">
+		update tbl_stats_menu set class = #{newMenu} where class = #{oldMenu}
+	</update>
+	<update id="updateSubMenu">
+		update tbl_stats_menu set sub_class = #{newMenu} where sub_class = #{oldMenu}
+	</update>
+	<delete id="deleteMenuById">
+		delete from tbl_stats_menu where id = #{id}
+	</delete>
+	<delete id="batchDeleteMenus">
+		delete from tbl_stats_menu where id
+		in
+		<foreach collection="list" item="id" separator="," open="(" close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!--<insert id="batchInsert">
+		insert into tbl_stats_menu (kilometer, address,
+		run_date, `year`, `month`, `day`, week_day, run_second, time_by_km,
+		km_by_hour)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.kilometer}, #{item.address}, #{item.runDate},
+			#{item.year,jdbcType=INTEGER}, #{item.month,jdbcType=INTEGER},
+			#{item.day,jdbcType=INTEGER}, #{item.weekDay,jdbcType=VARCHAR},
+			#{item.runSecond}, #{item.timeByKm},#{item.kmByHour}
+			)
+		</foreach>
+	</insert>-->
+
+	<select id="selectProcessedMenus" resultType="com.lyp.count.menu.MenuEx">
+		select id, class as menu, group_concat(distinct sub_class) as subMenu,
+		group_concat(distinct id) as subMenuIdStr
+		from tbl_stats_menu GROUP BY menu
+	</select>
+	<select id="selectMenuTableData" resultType="com.lyp.count.menu.Menu">
+		select id, class as menu, sub_class as subMenu,date(update_time) updateTime
+		from tbl_stats_menu
+		ORDER BY class
+		limit #{beginIndex},#{pageSize}
+	</select>
+	<select id="countMenuTableData" resultType="java.lang.Integer">
+		select count(id)
+		from tbl_stats_menu
+	</select>
+	<!--<select id="countByCondition" resultType="java.lang.Integer">
+		select count(id) from tbl_stats_menu
+		<where>
+			<if test="year != null and year != 0">
+				and `year` = #{year}
+			</if>
+			<if test="month != null and month != 0">
+				and `month` = #{month}
+			</if>
+		</where>
+	</select>
+	<select id="selectSpecialWeek" resultType="com.lyp.count.menu.Menu">
+		select sum(kilometer) kilometer,week_day weekDay from tbl_stats_menu
+		where date(run_date) &gt;= date(#{specialMonday}) and date(run_date) &lt;= date(#{specialSunday})
+		group by run_date
+	</select>
+	<select id="countSpecialWeek" resultType="java.lang.Integer">
+		select count(id) from tbl_stats_menu
+		where date(run_date) &gt;= date(#{specialMonday}) and date(run_date) &lt;= date(#{specialSunday})
+	</select>
+	<select id="countByMonth" resultType="com.lyp.count.menu.Menu">
+		SELECT sum(kilometer) kilometer, `year`, `month`, `day`, run_date FROM tbl_stats_menu
+		where `year` =#{year} and `month` =#{month}
+		group BY DAY
+	</select>
+	<select id="selectYearMonthScope" resultType="com.lyp.count.common.bean.YearMonthScopeVO">
+			SELECT MAX(yearMonth) maxYearMonth,MIN(yearMonth) minYearMonth,MAX(YEAR) maxYear,MIN(YEAR) minYear FROM
+			(SELECT YEAR*100+MONTH yearMonth,YEAR FROM tbl_stats_menu) t
+	</select>
+	<select id="selectTotalRunTime" resultType="java.lang.Integer">
+		SELECT COUNT(id) FROM tbl_stats_menu
+		where 1=1
+		<if test="year != null">
+			and `year` =#{year}
+		</if>
+		<if test="month != null">
+			and `month` =#{month}
+		</if>
+	</select>
+	<select id="selectAllMonthByYear" resultType="com.lyp.count.menu.Menu">
+		select year,month,sum(kilometer) kilometer
+		from tbl_stats_menu where year = #{year} group by month
+	</select>
+	<select id="selectAlYearsData" resultType="com.lyp.count.menu.Menu">
+		select year,sum(kilometer) kilometer from tbl_stats_menu group by `year` order by year asc
+	</select>
+	<select id="selectAddresses" resultType="java.lang.String">
+		select distinct address address from tbl_stats_menu
+	</select>-->
+
+</mapper>
