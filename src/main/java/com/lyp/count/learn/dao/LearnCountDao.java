@@ -21,7 +21,7 @@ public interface LearnCountDao{
   /**
    * 总的学习次数
    *
-   * @param year 年
+   * @param year  年
    * @param month 月
    * @return 次数
    */
@@ -29,13 +29,17 @@ public interface LearnCountDao{
 
   List<LearnCountDetail> selectAllMonthByYear(QueryLearnVO queryVO);
 
-  List<LearnCountDetail> selectAlYearsData();
+  List<LearnCountDetail> selectAlYearsData(QueryLearnVO queryVO);
 
   YearMonthScopeVO selectYearMonthScope();
 
-  List<String> selectContent();
+  List<LearnCountDetail> selectSpecialWeek(@Param("mondayDay") String mondayDay, @Param("sundayDay") String sundayDay,
+      @Param("learnContent") String learnContent, @Param("menuId") Long menuId);
 
-  List<LearnCountDetail> selectSpecialWeek(@Param("mondayDay") String mondayDay, @Param("sundayDay") String sundayDay, @Param("learnContent") String learnContent);
+  int countSpecialWeek(@Param("mondayDay") String mondayDay, @Param("sundayDay") String sundayDay,
+      @Param("learnContent") String learnContent, @Param("menuId") Long menuId);
 
-  int countSpecialWeek(@Param("mondayDay") String mondayDay, @Param("sundayDay") String sundayDay, @Param("learnContent") String learnContent);
+  List<String> selectContent(@Param("menuId") Long menuId);
+
+  List<String> selectAddress(@Param("menuId") Long menuId);
 }

@@ -9,6 +9,8 @@ public class QueryLearnVO extends Page{
 
   private Long id;
 
+  private Long menuId;
+
   private String learnContent;
 
   private String learnDate;

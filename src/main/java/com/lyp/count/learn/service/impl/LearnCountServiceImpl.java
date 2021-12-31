@@ -1,5 +1,6 @@
 package com.lyp.count.learn.service.impl;
 
+import com.google.common.collect.ImmutableMap;
 import com.lyp.count.common.bean.CountVO;
 import com.lyp.count.common.bean.JsonResult;
 import com.lyp.count.common.bean.YearMonthScopeVO;
@@ -68,15 +69,15 @@ public class LearnCountServiceImpl implements LearnCountService{
   }
 
   @Override
-  public JsonResult countWeek(int weekIndex, String learnContent){
+  public JsonResult countWeek(int weekIndex, String learnContent, Long menuId){
     if(weekIndex > 0){
       return JsonResult.validFail("参数非法");
     }
 
-    if("init".equals(learnContent)){
-      List<String> scopeVO = learnCountDao.selectContent();
+    /*if("init".equals(learnContent)){
+      List<String> scopeVO = learnCountDao.selectAddressContent(menuId);
       learnContent = scopeVO.get(0);
-    }
+    }*/
 
     // 获取当前周的周一的日期
     LocalDate currentWeekStartDay = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SUNDAY)).plusDays(1);
@@ -85,7 +86,7 @@ public class LearnCountServiceImpl implements LearnCountService{
     LocalDate specialMonday = currentWeekStartDay.plusWeeks(weekIndex);
     LocalDate specialSunday = specialMonday.plusDays(6);
     List<LearnCountDetail> oneWeekCount = learnCountDao
-        .selectSpecialWeek(specialMonday.format(dtf), specialSunday.format(dtf), learnContent);
+        .selectSpecialWeek(specialMonday.format(dtf), specialSunday.format(dtf), learnContent,menuId);
     String fromMonthDay = MonthDay.from(specialMonday).format(DateTimeFormatter.ofPattern("MM-dd"));
     String toMonthDay = MonthDay.from(specialSunday).format(DateTimeFormatter.ofPattern("MM-dd"));
 
@@ -104,7 +105,7 @@ public class LearnCountServiceImpl implements LearnCountService{
     CountVO response = new CountVO(null, values, totalKms.toString());
     response.setWeekDayScope(weekDayScope.replace("-", "/"));
 
-    int totalNum = learnCountDao.countSpecialWeek(specialMonday.format(dtf), specialSunday.format(dtf), learnContent);
+    int totalNum = learnCountDao.countSpecialWeek(specialMonday.format(dtf), specialSunday.format(dtf), learnContent,menuId);
     response.setTotalTimes(totalNum);
     return JsonResult.success("查询成功", response);
   }
@@ -121,11 +122,11 @@ public class LearnCountServiceImpl implements LearnCountService{
       return JsonResult.validFail("年份和月份居必传");
     }
     String learnContent = queryVO.getLearnContent();
-    if("init".equals(learnContent)){
-      List<String> scopeVO = learnCountDao.selectContent();
+    /*if("init".equals(learnContent)){
+      List<String> scopeVO = learnCountDao.selectAddressContent(menuId);
       learnContent = scopeVO.get(0);
       queryVO.setLearnContent(learnContent);
-    }
+    }*/
 
     List<LearnCountDetail> countVOS = learnCountDao.countByMonth(queryVO);
     try{
@@ -159,8 +160,8 @@ public class LearnCountServiceImpl implements LearnCountService{
   }
 
   @Override
-  public JsonResult countAllYears(){
-    List<LearnCountDetail> runCountDetails = learnCountDao.selectAlYearsData();
+  public JsonResult countAllYears(QueryLearnVO queryVO){
+    List<LearnCountDetail> runCountDetails = learnCountDao.selectAlYearsData(queryVO);
     CountVO countVO = LearnUtils.processAllYears(runCountDetails);
 
     log.info("Count all years successfully.");
@@ -177,11 +178,16 @@ public class LearnCountServiceImpl implements LearnCountService{
   }
 
   @Override
-  public JsonResult getExistedContent(){
+  public JsonResult getAddressContent(Long menuId){
     log.info("Begin to select existed content.");
-    List<String> scopeVO = learnCountDao.selectContent();
+    if(menuId == 0){
+      return JsonResult.fail("menuId不能为0");
+    }
+
+    List<String> contents = learnCountDao.selectContent(menuId);
+    List<String> addresses = learnCountDao.selectAddress(menuId);
 
     log.info("Query successfully.");
-    return JsonResult.success("查询年月范围成功", scopeVO);
+    return JsonResult.success("查询内容与地址成功", ImmutableMap.of("contents", contents, "addresses", addresses));
   }
 }

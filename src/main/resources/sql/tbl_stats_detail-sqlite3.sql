@@ -8,8 +8,6 @@ create table if not exists `tbl_stats_detail` (
 	`begin_time` varchar(15) , --  '统计开始时间'
 	`end_time` varchar(15) , --  '统计结束时间'
 	`total_time` INT(11) , -- 总时长，单位为秒,
-	`unit` varchar(15) , --  '统计单位，如小时，公里，次数，只'
-	`num` decimal(9,2) , --  '统计数，与统计单位配合，如0.5小时，0.5公里'
 	`year` int(4)  , --  '年，数据格式如：2021'
 	`month` int(2)  , --  '月，数据格式为：1，2，...12'
 	`day` int(2) , --  '日，数据格式为：1，2，...31'

@@ -10,9 +10,13 @@ public class LearnCountDetail{
 
   private Long id;
 
+  private Long menuId;
+
   @NotNull
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "跑步日期格式必须是：yyyy-MM-dd")
   private String learnDate;
+
+  private String address;
 
   @NotNull
   @Pattern(regexp = "^\\d{2}\\.\\d{2}$", message = "学习开始时间格式必须是：HH.mm")

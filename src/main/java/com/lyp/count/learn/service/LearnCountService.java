@@ -11,15 +11,15 @@ public interface LearnCountService{
 
   JsonResult getList(QueryLearnVO queryVO);
 
-  JsonResult countWeek(int weekIndex, String learnContent);
+  JsonResult countWeek(int weekIndex, String learnContent, Long menuId);
 
   JsonResult countInOneMonth(QueryLearnVO queryVO);
 
   JsonResult countInOneYear(QueryLearnVO queryVO);
 
-  JsonResult countAllYears();
+  JsonResult countAllYears(QueryLearnVO menuId);
 
   JsonResult getYearMonthScope();
 
-  JsonResult getExistedContent();
+  JsonResult getAddressContent(Long menuId);
 }

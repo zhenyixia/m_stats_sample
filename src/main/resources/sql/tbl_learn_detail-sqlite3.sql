@@ -2,6 +2,8 @@ DROP TABLE tbl_learn_detail;
 CREATE TABLE `tbl_learn_detail` (
  -- 学习详情表
 	`id` integer  primary KEY autoincrement, --id
+	`menu_id` INTEGER default 28, -- 默认为工作学习菜单id，因为是从工作学习表扩展的
+	`address`  VARCHAR(150) default '西安市高新区东滩社区',
 	`learn_date` VARCHAR(15) , -- 学习日期
 	`begin_time` VARCHAR(15) , -- 学习开始时间
 	`end_time` VARCHAR(15) , -- 学习结束时间
@@ -14,3 +16,4 @@ CREATE TABLE `tbl_learn_detail` (
 	`update_time` datetime default (datetime('now', 'localtime'))  -- 记录更新时间,
 );
 CREATE INDEX tbl_learn_detail_learn_date ON tbl_learn_detail(learn_date);
+CREATE INDEX tbl_learn_detail_learn_address ON tbl_learn_detail(address);

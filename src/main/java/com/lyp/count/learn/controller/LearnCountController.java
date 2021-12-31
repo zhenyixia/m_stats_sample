@@ -4,18 +4,9 @@ import com.lyp.count.common.bean.JsonResult;
 import com.lyp.count.learn.bean.LearnCountDetail;
 import com.lyp.count.learn.bean.QueryLearnVO;
 import com.lyp.count.learn.service.LearnCountService;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,8 +39,8 @@ public class LearnCountController{
   // http://127.0.0.1:8081/run/countWeek?weekIndex=0
   @GetMapping(value = "countWeek")
   public JsonResult countWeek(@RequestParam(value = "weekIndex") int weekIndex,
-      @RequestParam(value = "learnContent") String learnContent){
-    return learnCountService.countWeek(weekIndex,learnContent);
+      @RequestParam(value = "learnContent") String learnContent,@RequestParam(value = "menuId") Long menuId){
+    return learnCountService.countWeek(weekIndex,learnContent,menuId);
   }
 
   @PostMapping(value = "countInOneMonth")
@@ -62,9 +53,9 @@ public class LearnCountController{
     return learnCountService.countInOneYear(queryVO);
   }
 
-  @GetMapping(value = "countAllYears")
-  public JsonResult countAllYears(){
-    return learnCountService.countAllYears();
+  @PostMapping(value = "countAllYears")
+  public JsonResult countAllYears(@RequestBody QueryLearnVO queryVO){
+    return learnCountService.countAllYears(queryVO);
   }
 
   @GetMapping(value = "getYearMonthScope")
@@ -72,8 +63,8 @@ public class LearnCountController{
     return learnCountService.getYearMonthScope();
   }
 
-  @GetMapping(value = "getExistedContent")
-  public JsonResult getExistedContent(){
-    return learnCountService.getExistedContent();
+  @GetMapping(value = "getAddressContent")
+  public JsonResult getAddressContent(@RequestParam(value = "menuId") Long menuId){
+    return learnCountService.getAddressContent(menuId);
   }
 }
