@@ -26,11 +26,11 @@ spring:
 #           url: jdbc:sqlite:D:\all-dev-learning\005--GIT\006_my_repository\stats\runCount.db
             url: jdbc:sqlite:runCount.db
             driver-class-name: org.sqlite.JDBC
-          slave:
-            username: root
-            password: ENC(ey/INZfInTEGpFnu23IabA==)
-            url: jdbc:mysql://localhost:3306/springboot01?serverTimeZone=UTC&characterEncoding=utf8
-            driver-class-name: com.mysql.jdbc.Driver
+#          slave:
+#            username: root
+#            password: ENC(ey/INZfInTEGpFnu23IabA==)
+#            url: jdbc:mysql://localhost:3306/springboot01?serverTimeZone=UTC&characterEncoding=utf8
+#            driver-class-name: com.mysql.jdbc.Driver
 
 #pagehelper:
 #  helper-dialect: mysql
