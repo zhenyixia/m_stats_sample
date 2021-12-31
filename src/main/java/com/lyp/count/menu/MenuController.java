@@ -2,6 +2,7 @@ package com.lyp.count.menu;
 
 import com.lyp.count.common.bean.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,5 +55,10 @@ public class MenuController{
   @PostMapping(value = "modifySub")
   public JsonResult modifySub(@RequestBody MenuMod menuMod){
     return menuService.modifySub(menuMod);
+  }
+
+  @GetMapping(value = "getLatestSubMenus")
+  public JsonResult getLatestSubMenus(){
+    return menuService.getLatestSubMenus();
   }
 }

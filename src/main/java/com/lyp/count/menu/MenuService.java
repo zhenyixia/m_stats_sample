@@ -2,6 +2,7 @@ package com.lyp.count.menu;
 
 import com.google.common.collect.ImmutableMap;
 import com.lyp.count.common.bean.JsonResult;
+import com.lyp.count.learn.dao.LearnCountDao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,18 +24,20 @@ public class MenuService{
   @Autowired
   MenuDao menuDao;
 
+  @Autowired
+  LearnCountDao learnCountDao;
+
   public JsonResult getAllMenus(){
 
     List<MenuEx> menuList = menuDao.selectProcessedMenus();
+    List<String> menus = menuDao.selectMenusAsc();
 
     Map<String, List<Map<String, String>>> allMenuObjects = new HashMap<>();
-    List<String> menus = new ArrayList<>();
     List<String> menuSubMenus = new ArrayList<>();
 
     menuList.forEach(menu -> {
       List<Map<String, String>> subMenuList = menu.getSubMenuList();
       allMenuObjects.put(menu.getMenu(), subMenuList);
-      menus.add(menu.getMenu());
       menuSubMenus.add(menu.getMenu());
       if(!CollectionUtils.isEmpty(subMenuList)){
         List<String> subMenus = subMenuList.stream().map(map -> map.get("name")).collect(Collectors.toList());
@@ -42,7 +45,13 @@ public class MenuService{
       }
     });
 
-    return JsonResult.success("查询成功", ImmutableMap.of("menus", menus, "menuSubMenus", menuSubMenus, "allMenuObjects", allMenuObjects));
+    return JsonResult
+        .success("查询成功", ImmutableMap.of("menus", menus, "menuSubMenus", menuSubMenus, "allMenuObjects", allMenuObjects));
+  }
+
+  public JsonResult getLatestSubMenus(){
+    List<Menu> menuList = menuDao.selectLatestSubMenus();
+    return JsonResult.success("查询成功", ImmutableMap.of("subMenus", menuList));
   }
 
   public JsonResult addMenu(String menu, String subMenu){
@@ -61,6 +70,7 @@ public class MenuService{
 
   public JsonResult deleteMenu(long id){
     int num = menuDao.deleteMenuById(id);
+    int num2 = learnCountDao.deleteByMenuId(id);
     return JsonResult.success("删除成功");
   }
 

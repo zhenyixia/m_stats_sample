@@ -19,6 +19,9 @@
 			)
 		</foreach>
 	</insert>
+	<delete id="deleteByMenuId">
+		delete from tbl_learn_detail where menu_id = #{menuId}
+	</delete>
 
 	<sql id="QueryCondition">
 		<if test="year != null and year != 0">

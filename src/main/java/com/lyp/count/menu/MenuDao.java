@@ -22,4 +22,8 @@ public interface MenuDao{
   int updateMenu(MenuMod menuMod);
 
   int updateSubMenu(MenuMod menuMod);
+
+  List<String> selectMenusAsc();
+
+  List<Menu> selectLatestSubMenus();
 }

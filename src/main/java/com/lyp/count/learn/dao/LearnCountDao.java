@@ -42,4 +42,6 @@ public interface LearnCountDao{
   List<String> selectContent(@Param("menuId") Long menuId);
 
   List<String> selectAddress(@Param("menuId") Long menuId);
+
+  int deleteByMenuId(@Param("menuId") long menuId);
 }

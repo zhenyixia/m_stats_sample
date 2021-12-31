@@ -18,6 +18,4 @@ public class Menu{
   protected String subMenu;
 
   protected String updateTime;
-
-
 }

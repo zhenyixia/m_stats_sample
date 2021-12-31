@@ -40,18 +40,26 @@
 
 	<select id="selectProcessedMenus" resultType="com.lyp.count.menu.MenuEx">
 		select id, class as menu, group_concat(distinct sub_class) as subMenu,
-		group_concat(distinct id) as subMenuIdStr
-		from tbl_stats_menu GROUP BY menu
+		group_concat(distinct id) as subMenuIdStr from
+		(SELECT * from tbl_stats_menu order BY  update_time asc) t GROUP BY menu
 	</select>
 	<select id="selectMenuTableData" resultType="com.lyp.count.menu.Menu">
 		select id, class as menu, sub_class as subMenu,date(update_time) updateTime
 		from tbl_stats_menu
-		ORDER BY class
+		ORDER BY update_time desc
 		limit #{beginIndex},#{pageSize}
 	</select>
 	<select id="countMenuTableData" resultType="java.lang.Integer">
 		select count(id)
 		from tbl_stats_menu
+	</select>
+	<select id="selectMenusAsc" resultType="java.lang.String">
+		SELECT DISTINCT class from tbl_stats_menu order BY  update_time asc
+	</select>
+	<select id="selectLatestSubMenus" resultType="com.lyp.count.menu.Menu">
+		SELECT t1.id, t1.class as menu, t1.sub_class as subMenu from  tbl_stats_menu t1 JOIN
+		(SELECT menu_id,max(update_time) update_time FROM tbl_learn_detail GROUP BY menu_id) t2
+		ON t1.id = t2.menu_id ORDER BY t2.update_time DESC
 	</select>
 	<!--<select id="countByCondition" resultType="java.lang.Integer">
 		select count(id) from tbl_stats_menu
