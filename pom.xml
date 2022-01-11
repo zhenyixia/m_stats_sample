@@ -225,6 +225,15 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>sql/**</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<!--这里写上打成jar包的名称-->
 		<finalName>stats</finalName>
 		<plugins>
