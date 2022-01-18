@@ -59,7 +59,12 @@
 	<select id="selectLatestSubMenus" resultType="com.lyp.count.menu.Menu">
 		SELECT t1.id, t1.class as menu, t1.sub_class as subMenu from  tbl_stats_menu t1 JOIN
 		(SELECT menu_id,max(update_time) update_time FROM tbl_learn_detail GROUP BY menu_id) t2
-		ON t1.id = t2.menu_id ORDER BY t2.update_time DESC
+		ON t1.id = t2.menu_id ORDER BY t2.update_time DESC LIMIT 0,6
+	</select>
+	<select id="selectLatestContents" resultType="com.lyp.count.menu.Menu">
+		SELECT t1.id, t1.class as menu, t1.sub_class as subMenu,t2.learn_content AS content from  tbl_stats_menu t1 JOIN
+		(SELECT menu_id,learn_content,max(update_time) update_time FROM tbl_learn_detail WHERE learn_content IS NOT null GROUP BY learn_content) t2
+		ON t1.id = t2.menu_id ORDER BY t2.update_time DESC  LIMIT 0,6
 	</select>
 	<!--<select id="countByCondition" resultType="java.lang.Integer">
 		select count(id) from tbl_stats_menu

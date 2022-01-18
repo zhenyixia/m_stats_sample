@@ -49,8 +49,13 @@ public class MenuService{
         .success("查询成功", ImmutableMap.of("menus", menus, "menuSubMenus", menuSubMenus, "allMenuObjects", allMenuObjects));
   }
 
-  public JsonResult getLatestSubMenus(){
-    List<Menu> menuList = menuDao.selectLatestSubMenus();
+  public JsonResult getLatestSubMenus(boolean isDetailView){
+    List<Menu> menuList;
+    if(isDetailView){
+      menuList = menuDao.selectLatestContents();
+    }else{
+      menuList = menuDao.selectLatestSubMenus();
+    }
     return JsonResult.success("查询成功", ImmutableMap.of("subMenus", menuList));
   }
 

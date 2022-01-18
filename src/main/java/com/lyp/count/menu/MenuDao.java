@@ -26,4 +26,6 @@ public interface MenuDao{
   List<String> selectMenusAsc();
 
   List<Menu> selectLatestSubMenus();
+
+  List<Menu> selectLatestContents();
 }

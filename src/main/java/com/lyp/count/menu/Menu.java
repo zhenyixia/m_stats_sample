@@ -17,5 +17,7 @@ public class Menu{
 
   protected String subMenu;
 
+  protected String content;
+
   protected String updateTime;
 }

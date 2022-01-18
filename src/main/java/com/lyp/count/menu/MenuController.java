@@ -57,8 +57,8 @@ public class MenuController{
     return menuService.modifySub(menuMod);
   }
 
-  @GetMapping(value = "getLatestSubMenus")
-  public JsonResult getLatestSubMenus(){
-    return menuService.getLatestSubMenus();
+  @PostMapping(value = "getLatestSubMenus")
+  public JsonResult getLatestSubMenus(@RequestParam(value = "isDetailView") boolean isDetailView){
+    return menuService.getLatestSubMenus(isDetailView);
   }
 }
