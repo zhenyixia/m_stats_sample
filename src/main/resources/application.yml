@@ -24,7 +24,7 @@ spring:
             username:
             password:
 #           url: jdbc:sqlite:D:\all-dev-learning\005--GIT\006_my_repository\stats\runCount.db
-            url: jdbc:sqlite:runCount.db
+            url: jdbc:sqlite:stats.db
             driver-class-name: org.sqlite.JDBC
 #          slave:
 #            username: root
