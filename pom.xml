@@ -262,7 +262,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
-					<finalName>runCount</finalName>
+					<finalName>stats</finalName>
 					<!-- 不添加assembly的id到打包后的文件名称中 -->
 					<appendAssemblyId>false</appendAssemblyId>
 					<!--   这个是assembly 所在位置  -->
